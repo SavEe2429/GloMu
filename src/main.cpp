@@ -88,7 +88,7 @@ void taskSerial(void *param)
 
       if (cmd == 'S')
       {
-        if (xQueueReceive(sensorQueue, &dataSend, 0))
+        if (xQueueReceive(sensorQueue, &dataSend, pdMS_TO_TICKS(50)))
         {
           assignData(dataSend);
         }

@@ -3,10 +3,16 @@ from serial.tools import list_ports
 
 HEADER = ["id", "gesture_name", "timestamp", "ax", "ay", "az", "gx", "gy", "gz", "p0", "p1", "p2", "p3"]
 
-def save_csv(filename , data_rows):
-    """ฟังก์ชั่นเริ่มต้น csv"""
+def save_csv(filename, data_rows):
+    """ฟังก์ชั่นเริ่มต้น csv และสร้างโฟลเดอร์ถ้าไม่มีอยู่"""
+    # 🎯 เพิ่มส่วนนี้: ดึงชื่อโฟลเดอร์จาก filename
+    dirname = os.path.dirname(filename)
+    if dirname and not os.path.exists(dirname):
+        os.makedirs(dirname) # สร้างโฟลเดอร์ (เช่น backend) ให้โดยอัตโนมัติ
+        print(f"📁 Created directory: {dirname}")
+
     file_exist = os.path.isfile(filename)
-    with open(filename , "a" , newline="" , encoding="utf-8") as f:
+    with open(filename, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if not file_exist:
             writer.writerow(HEADER)
@@ -52,7 +58,7 @@ def init_serial(BAUD_RATE=115200):
 
 
 def dynamic_record_gesture(ser , label, gesture_id):
-    filename = f"dynamic_record_gesture.csv"
+    filename = f"./backend/dynamic_record_gesture.csv"
     print(f"เตรียมบันทึกท่า : {label} (ID : {gesture_id})\n")
     input("กด Enter เมื่อพร้อมขยับมือ...")
 
@@ -84,7 +90,7 @@ def dynamic_record_gesture(ser , label, gesture_id):
 
 
 def static_record_gesture(ser , label, gesture_id):
-    filename = f"static_gesture_data.csv"
+    filename = f"./backend/static_gesture_data.csv"
     print(f"เตรียมบันทึกท่า : {label} (ID : {gesture_id})\n")
     input("กด Enter เมื่อพร้อมขยับมือ...")
 
