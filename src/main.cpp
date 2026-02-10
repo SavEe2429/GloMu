@@ -43,8 +43,8 @@ void taskSensorCollect(void *param)
     }
 
     // ส่งข้อมูลไปใน Queue
-    xQueueSend(sensorQueue, &sensorData, portMAX_DELAY); // ส่งค่าเข้าไปใน Queue
-    vTaskDelay(20 / portTICK_PERIOD_MS);
+    xQueueOverwrite(sensorQueue, &sensorData); // ส่งค่าเข้าไปใน Queue
+    vTaskDelay(10 / portTICK_PERIOD_MS);
   }
 }
 
@@ -79,16 +79,10 @@ void taskSerial(void *param)
         Serial.read();
       }
 
-      // ไม่ว่าจะ S หรือ R ให้ล้างคิวเก่าทิ้งก่อนเสมอ
-      if (cmd == 'S' || cmd == 'R')
-      {
-        xQueueReset(sensorQueue);
-        // การ Reset ตรงนี้จะทำให้ข้อมูลเก่า 100 ชุดที่ค้างอยู่หายไปทันที
-      }
-
       if (cmd == 'S')
       {
-        if (xQueueReceive(sensorQueue, &dataSend, pdMS_TO_TICKS(50)))
+        vTaskDelay(20 / portTICK_PERIOD_MS);
+        if (xQueueReceive(sensorQueue, &dataSend, 0))
         {
           assignData(dataSend);
         }
@@ -139,11 +133,25 @@ void setup()
   Serial.println(F("พิกัดปัจจุบัน (องศา):"));
   Serial.printf("X: %.2f\t\tY: %.2f\t\tZ: %.2f\n", mpu.getGyroX(), mpu.getGyroY(), mpu.getGyroZ());
 
-  sensorQueue = xQueueCreate(100, sizeof(DataType));
+  // ตั้งค่า Resolution เป็น 12-bit (0 - 4095)
+  analogReadResolution(12);
+
+  // ตั้งค่าความไว (Attenuation) เพื่อให้อ่านแรงดันได้สูงสุดประมาณ 3.3V
+  analogSetAttenuation(ADC_11db);
+
+  sensorQueue = xQueueCreate(1, sizeof(DataType));
   xTaskCreate(taskSensorCollect, "taskPotentiometer", 4095, NULL, 1, NULL);
   xTaskCreate(taskSerial, "taskSerial", 4095, NULL, 1, NULL);
 }
 
 void loop()
 {
+  // Serial.print("ADC Values: ");
+  // for (int i = 0; i < 4; i++) {
+  //   int val = analogRead(potPins[i]); // อ่านค่าจากขา 34, 35, 32, 33
+  //   Serial.print(val);
+  //   if (i < 3) Serial.print(", ");
+  // }
+  // Serial.println();
+  // delay(100); // หน่วงเวลาเล็กน้อยเพื่อให้ดูทัน
 }
