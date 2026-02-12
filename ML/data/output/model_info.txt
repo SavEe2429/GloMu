@@ -1,6 +1,31 @@
-Selected Features:
+GESTURE RECOGNITION MODEL
 ==================================================
 
+Model Type: Random Forest
+Training Date: 2026-02-12 23:04:44.725608
+
+PERFORMANCE METRICS:
+--------------------------------------------------
+Test Accuracy: 0.9565
+Training Accuracy: 0.9888
+CV Accuracy: 0.9438 (±0.0352)
+
+DATA CONFIGURATION:
+--------------------------------------------------
+Window Size: 41 samples
+Step Size: 20 samples
+Number of Features: 50
+Number of Classes: 5
+Classes: 1, 2, 3, 4, idle
+
+TRAINING DATA:
+--------------------------------------------------
+Total Windows: 112
+Training Samples: 89
+Test Samples: 23
+
+SELECTED FEATURES:
+--------------------------------------------------
 1. ax_mean
 2. ax_min
 3. ax_max
