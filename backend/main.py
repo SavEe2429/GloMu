@@ -1,7 +1,9 @@
-import csv
-import serial
-import time
-from Local_Serial import init_serial, dynamic_record_gesture, static_record_gesture
+from Local_Serial import (
+    init_serial,
+    dynamic_record_gesture,
+    static_record_gesture,
+    execute_gesture,
+)
 from tts import speak_number
 
 
@@ -14,41 +16,48 @@ def main():
             return
 
         while True:
-            cmd = input(
-                "เลือกโหมด (r: ท่าเคลื่อนไหว, s: ท่านิ่ง, t: ฟังเสียง, q: ออก): "
-            ).lower()
+            choice = input("เลือกโหมด (w: ใช้งานจริง , d: เก็บข้อมูล) : ").lower()
+            match choice:
+                case "w":
+                        execute_gesture(ser)
+                case "d":
+                    cmd = input(
+                        "เลือกโหมด (r: เก็บข้อมูลท่าเคลื่อนไหว, s: เก็บข้อมูลท่านิ่ง, t: ฟังเสียง, q: ออก): "
+                    ).lower()
 
-            if cmd == 'q':
-                break
+                    if cmd == "q":
+                        break
 
-            elif cmd in ['r', 's']:
-                label = input("ชื่อท่า :")
-                g_id = input("ID ของท่า :")
+                    elif cmd in ["r", "s"]:
+                        label = input("ชื่อท่า :")
+                        g_id = input("ID ของท่า :")
 
-                if cmd == 'r':
-                    dynamic_record_gesture(ser, label, g_id)
-                else:
-                    static_record_gesture(ser, label, g_id)
-
-            elif cmd == 't':
-                print("โหมด TTS (กด Ctrl + C เพื่อออก)")
-                try:
-                    while True:
-                        if ser.in_waiting:
-                            line = ser.readline().decode(errors="ignore").strip()
-                            print("รับ:", line)
-
-                            # ถ้าเป็นตัวเลขล้วน
-                            if line.isdigit():
-                                speak_number(int(line))
+                        if cmd == "r":
+                            dynamic_record_gesture(ser, label, g_id)
                         else:
-                            time.sleep(0.01)
+                            static_record_gesture(ser, label, g_id)
+                case _:
+                    print("กรุณากรอก (w: ใช้งานจริง , d: เก็บข้อมูล)")
 
-                except KeyboardInterrupt:
-                    print("\nออกจากโหมด TTS")
+            # elif cmd == "t":
+            #     print("โหมด TTS (กด Ctrl + C เพื่อออก)")
+            #     try:
+            #         while True:
+            #             if ser.in_waiting:
+            #                 line = ser.readline().decode(errors="ignore").strip()
+            #                 print("รับ:", line)
 
-            else:
-                print("คำสั่งไม่ถูกต้อง โปรดใส่ r, s, t, q")
+            #                 # ถ้าเป็นตัวเลขล้วน
+            #                 if line.isdigit():
+            #                     speak_number(int(line))
+            #             else:
+            #                 time.sleep(0.01)
+
+            #     except KeyboardInterrupt:
+            #         print("\nออกจากโหมด TTS")
+
+            # else:
+            #     print("คำสั่งไม่ถูกต้อง โปรดใส่ r, s, t, q")
 
     except KeyboardInterrupt:
         print("\nปิดโปรแกรม")
