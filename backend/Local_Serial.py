@@ -1,6 +1,8 @@
-import serial, csv, time , os
+import serial, csv, time , os , sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
 from serial.tools import list_ports
 
+from ML.main import predict
 HEADER = ["id", "gesture_name", "timestamp", "ax", "ay", "az", "gx", "gy", "gz", "p0", "p1", "p2", "p3"]
 
 def save_csv(filename, data_rows):
@@ -63,7 +65,7 @@ def dynamic_record_gesture(ser , label, gesture_id):
     input("กด Enter เมื่อพร้อมขยับมือ...")
 
     print(f"บันทึกลงไฟล์: {filename}")
-    ser.write(b"R")  # ส่งคำสั่ง r ไปที่ ESP32
+    ser.write(b"r")  # ส่งคำสั่ง r ไปที่ ESP32
     data_list = []
     recording = False
 
@@ -95,7 +97,7 @@ def static_record_gesture(ser , label, gesture_id):
     input("กด Enter เมื่อพร้อมขยับมือ...")
 
     print(f"บันทึกลงไฟล์: {filename}")
-    ser.write(b"S") 
+    ser.write(b"s") 
     line = ser.readline().decode("utf-8").strip() # อ่านข้อมูลจาก serial
     if line:
         raw_data = line.split(",")
@@ -105,4 +107,30 @@ def static_record_gesture(ser , label, gesture_id):
         print(f"บันทึก Snapshot ท่า {label} สำเร็จ: {line}")
     else:
         print("ไม่มีข้อมูลตอบกลับ (Timeout)")
+
+def execute_gesture(ser):
+    input("กด Enter เมื่อพร้อมขยับมือ...")
+    # ser.write(b"w")
+    window_size = 50
+    data_buffer = []
+
+    while True:
+        ser.write(b"w")
+        line = ser.readline().decode("utf-8").strip()
+        if line:
+            raw_data = line.split(",")
+            if len(raw_data) == 11:
+                gyro = [float(x) for x in raw_data[1:7]]
+                pot = [int(x) for x in raw_data[7:]]
+                data = gyro + pot
+                data_buffer.append(data)
+            
+            if len(data_buffer) >= window_size:
+                predict(data_buffer)
+                data_buffer = data_buffer[10:]
+
+        
+
+
+
 

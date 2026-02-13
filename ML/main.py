@@ -1,23 +1,24 @@
 import numpy as np
 import pandas as pd
-import joblib
-
+import joblib , sys , os , warnings
+warnings.filterwarnings("ignore")
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__) , "..")))
+from backend.tts import speak_number
 # -------------------------------------
 # 1️⃣ LOAD MODEL
 # -------------------------------------
 
-model = joblib.load("./models/randomforest_model.pkl")
+model = joblib.load("./ML/models/randomforest_model.pkl")
 print("✓ Model loaded")
 
 
 # -------------------------------------
 # 2️⃣ FEATURE EXTRACTION
 # -------------------------------------
+signals = ["ax","ay","az","gx","gy","gz","p0","p1","p2","p3"]
 
 def extract_features(window):
     features = []
-    signals = ["ax","ay","az","gx","gy","gz","p0","p1","p2","p3"]
-
     for col in signals:
         data = window[col].values
 
@@ -36,55 +37,62 @@ def extract_features(window):
 
     return np.array(features)
 
+def predict(data_buffer):
+    df = pd.DataFrame(data_buffer , columns=signals)
+    features = extract_features(df).reshape(1,-1)
+    prediction = model.predict(features)[0]
+    prob = np.max(model.predict_proba(features))
+    print(f"ข้อมูล : {df} ท่าทางที่ตรวจพบ: {prediction} (ความมั่นใจ: {prob:.2f})")
+    speak_number(prediction)
 
-# -------------------------------------
-# 3️⃣ CREATE EXAMPLE WINDOW
-# -------------------------------------
+# # -------------------------------------
+# # 3️⃣ CREATE EXAMPLE WINDOW
+# # -------------------------------------
 
-WINDOW_SIZE = 50
-example_data = []
+# WINDOW_SIZE = 50
+# example_data = []
 
-for i in range(WINDOW_SIZE):
+# for i in range(WINDOW_SIZE):
 
-    ax = 1.20
-    ay = 0.41
-    az = 0.67
+#     ax = 1.20
+#     ay = 0.41
+#     az = 0.67
 
-    gx = -1.48
-    gy = -1.53
-    gz = -2.98
+#     gx = -1.48
+#     gy = -1.53
+#     gz = -2.98
 
-    p0 = 3996
-    p1 = 3996
-    p2 = 4095
-    p3 = 4095
+#     p0 = 3996
+#     p1 = 3996
+#     p2 = 4095
+#     p3 = 4095
 
-    example_data.append([ax, ay, az, gx, gy, gz, p0, p1, p2, p3])
+#     example_data.append([ax, ay, az, gx, gy, gz, p0, p1, p2, p3])
 
-df = pd.DataFrame(example_data, columns=[
-    "ax","ay","az","gx","gy","gz","p0","p1","p2","p3"
-])
-
-
-# -------------------------------------
-# 4️⃣ EXTRACT FEATURE
-# -------------------------------------
-
-features = extract_features(df)
-features = features.reshape(1, -1)
-
-print("Feature shape:", features.shape)
+# df = pd.DataFrame(example_data, columns=[
+#     "ax","ay","az","gx","gy","gz","p0","p1","p2","p3"
+# ])
 
 
-# -------------------------------------
-# 5️⃣ PREDICT
-# -------------------------------------
+# # -------------------------------------
+# # 4️⃣ EXTRACT FEATURE
+# # -------------------------------------
 
-prediction = model.predict(features)
+# features = extract_features(df)
+# features = features.reshape(1, -1)
 
-print("\nPrediction:", prediction[0])
+# print("Feature shape:", features.shape)
 
-# ถ้าเป็น classifier
-if hasattr(model, "predict_proba"):
-    prob = model.predict_proba(features)
-    print("Confidence:", np.max(prob))
+
+# # -------------------------------------
+# # 5️⃣ PREDICT
+# # -------------------------------------
+
+# prediction = model.predict(features)
+
+# print("\nPrediction:", prediction[0])
+
+# # ถ้าเป็น classifier
+# if hasattr(model, "predict_proba"):
+#     prob = model.predict_proba(features)
+#     print("Confidence:", np.max(prob))
