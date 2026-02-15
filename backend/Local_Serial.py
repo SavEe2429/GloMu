@@ -111,7 +111,7 @@ def static_record_gesture(ser , label, gesture_id):
 def execute_gesture(ser):
     input("กด Enter เมื่อพร้อมขยับมือ...")
     # ser.write(b"w")
-    window_size = 50
+    window_size = 100
     data_buffer = []
 
     while True:
@@ -127,7 +127,7 @@ def execute_gesture(ser):
             
             if len(data_buffer) >= window_size:
                 predict(data_buffer)
-                data_buffer = data_buffer[10:]
+                data_buffer = data_buffer[20:]
 
         
 
