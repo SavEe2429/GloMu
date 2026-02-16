@@ -17,7 +17,6 @@ struct DataType
 // สร้าง Object MPU6050
 MPU6050 mpu(Wire);
 QueueHandle_t sensorQueue;
-unsigned long timer = 0;
 
 void taskSensorCollect(void *param)
 {
