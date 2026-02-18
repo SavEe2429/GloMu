@@ -4,11 +4,38 @@ Real-time hand gesture recognition using ESP32 with machine learning powered cla
 
 ## What is GloMu?
 
-GloMu is an intelligent glove system that recognizes hand gestures in real-time using sensor fusion and machine learning. It combines an ESP32 microcontroller with an IMU sensor (MPU6050) and finger flex sensors to detect hand movements and classify them into predefined gestures. The system provides auditory feedback via text-to-speech and can be extended for various applications like sign language recognition, device control, or gesture-based interfaces.
+GloMu is an intelligent glove system that recognizes hand gestures in real-time using sensor fusion and machine learning. It combines an ESP32 microcontroller with a GY-521 IMU breakout module (containing MPU6050 chip) and finger flex sensors to detect hand movements and classify them into predefined gestures. The system provides auditory feedback via text-to-speech and can be extended for various applications like sign language recognition, device control, or gesture-based interfaces.
+
+## Background & Motivation
+
+### Problem Statement
+
+Individuals with hearing and speech disabilities face significant communication barriers in daily life. While sign language is a vital communication tool, many people in the general population lack proficiency in understanding it. This creates communication gaps and reduces opportunities for accessibility to services and social interaction.
+
+### Solution: GloMu
+
+GloMu (Gesture Recognition Glove) was developed to bridge this communication gap by translating hand sign language gestures into text and speech output in real-time. The system leverages Real-Time Embedded Systems technology and Machine Learning to achieve this goal.
+
+### Technical Approach
+
+The system architecture combines three key components:
+
+- **Potentiometer Sensors** (4x) - Measure finger flexion angles for capturing hand gesture shapes
+- **GY-521 IMU Module** (6-axis accelerometer and gyroscope) - Detect hand motion and movement patterns
+- **ESP32 Microcontroller** - Process sensor data in real-time using FreeRTOS for concurrent tasks
+- **Random Forest ML Model** - Classify gestures based on extracted features from sensor data
+
+### Course Alignment
+
+This project aligns with **Real-Time Embedded Systems (CPE-414)** concepts through:
+- Real-time task scheduling using FreeRTOS
+- Multi-tasking sensor data collection and processing
+- Time-critical gesture recognition pipeline
+- Hardware abstraction and interrupt-driven I/O
 
 ## Key Features
 
-- **Real-time Gesture Recognition**: MPU6050-based motion capture with 4 potentiometer finger flex sensors
+- **Real-time Gesture Recognition**: GY-521 (MPU6050) 6-axis motion capture with 4 potentiometer finger flex sensors
 - **Machine Learning Classification**: Random Forest model trained on gesture training data
 - **Flexible Training**: Record both static and dynamic gesture patterns
 - **Immediate Feedback**: Audio feedback through text-to-speech output
@@ -20,7 +47,7 @@ GloMu is an intelligent glove system that recognizes hand gestures in real-time 
 ### Hardware Requirements
 
 - ESP32 DevKit V1 board
-- MPU6050 (6-axis IMU sensor with accelerometer and gyroscope)
+- GY-521 Module (MPU6050 6-axis IMU breakout board with accelerometer and gyroscope)
 - 4x Flex/Potentiometer sensors (for finger detection)
 - USB cable for serial communication
 
@@ -62,7 +89,7 @@ platformio run --target upload
 #### 3. Hardware Wiring
 
 Connect sensors to ESP32:
-- **I2C (MPU6050)**: GPIO 21 (SDA), GPIO 22 (SCL)
+- **I2C (GY-521 Module)**: GPIO 21 (SDA), GPIO 22 (SCL)
 - **Potentiometers**: GPIO 34, 35, 32, 33 (analog inputs for fingers)
 - **Serial**: USB connection (CH340/CP2102 adapter)
 
