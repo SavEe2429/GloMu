@@ -76,6 +76,33 @@ pip install --upgrade pip
 pip install pyttsx3 pyserial
 ```
 
+#### 1.1 Install All Python Dependencies
+
+Install all required Python packages for both backend and ML components:
+
+```bash
+# Core dependencies for backend and ML
+pip install numpy pandas scikit-learn joblib pyttsx3 pyserial matplotlib
+
+# Or using requirements file approach (create requirements.txt)
+# numpy>=1.21.0
+# pandas>=1.3.0
+# scikit-learn>=1.0.0
+# joblib>=1.1.0
+# pyttsx3>=2.90
+# pyserial>=3.5
+# matplotlib>=3.5.0
+```
+
+**Key Libraries:**
+- **numpy** - Numerical computing and array operations
+- **pandas** - Data manipulation and CSV handling
+- **scikit-learn** - Machine learning tools (Random Forest model)
+- **joblib** - Model serialization and deserialization
+- **pyttsx3** - Text-to-speech for audio feedback
+- **pyserial** - Serial communication with ESP32
+- **matplotlib** - Data visualization (for analysis and plotting)
+
 #### 2. Flash ESP32 Firmware
 
 ```bash
@@ -85,6 +112,14 @@ cd path/to/ESP32
 # Build and upload with PlatformIO
 platformio run --target upload
 ```
+
+#### 2.1 ESP32 Library Dependencies
+
+The following libraries are automatically installed via `platformio.ini`:
+
+- **MPU6050_light** (v1.1.0) - Lightweight I2C driver for MPU6050 sensor
+
+These are defined in `platformio.ini` and automatically downloaded during the build process. No manual installation needed.
 
 #### 3. Hardware Wiring
 
