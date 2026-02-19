@@ -127,7 +127,7 @@ def execute_gesture(ser):
             
             if len(data_buffer) >= window_size:
                 predict(data_buffer)
-                data_buffer = data_buffer[20:]
+                data_buffer = data_buffer[100:]
 
         
 
