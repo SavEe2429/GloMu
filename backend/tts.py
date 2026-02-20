@@ -5,13 +5,14 @@ def speak_number(num):
     _engine = pyttsx3.init()
     voices = _engine.getProperty('voices')
     # ตั้งค่าเสียง (ปรับได้)
-    _engine.setProperty("rate", 160)   # ความเร็วพูด
+    _engine.setProperty("rate", 200)   # ความเร็วพูด
     _engine.setProperty("volume", 1.0) # ความดัง
 
     """
     รับเลข 1-4 แล้วพูดออกลำโพง
     """
     text_map = {
+        0: "orangjuie",
         1: "one",
         2: "two",
         3: "three",
