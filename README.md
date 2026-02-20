@@ -1,5 +1,10 @@
 # GloMu: Gesture Recognition Glove
 
+## Link
+- **Google Drive** : https://drive.google.com/drive/u/1/folders/1aNbicSI7xF_dG-nt3VzrBhgX0k_jOv1t
+- **Google Sheet** : https://docs.google.com/spreadsheets/d/1AK52Po2PopiThQfetodwSPBXLgG8P6sq/edit?gid=2104163647#gid=2104163647
+- **Canva** : https://www.canva.com/design/DAHBloOVODk/kTl6ioJri6zoe9AX_2IMqg/edit?utm_content=DAHBloOVODk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
 Real-time hand gesture recognition using ESP32 with machine learning powered classification.
 
 ## What is GloMu?
